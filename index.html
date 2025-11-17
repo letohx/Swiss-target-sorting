@@ -1,211 +1,118 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Швейцарская сортировка задач</title>
-
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-
-  <style>
-    :root{
-      --bg:#f6f7fb; --card:#ffffff; --muted:#666; --accent:#2b8aee; --danger:#ff4d4f;
-      --shadow: 0 6px 18px rgba(16,24,40,0.06);
-    }
-    [data-theme="dark"]{
-      --bg:#0f1113; --card:#161718; --muted:#bfc3c8; --accent:#4aa3ff; --danger:#ff6b6b;
-      --shadow: 0 6px 18px rgba(0,0,0,0.6);
-    }
-    html,body{height:100%}
-    body {
-      font-family: system-ui, Arial, "Segoe UI", Roboto;
-      max-width: 980px; margin: 20px auto; padding: 16px;
-      background:var(--bg); color: #222;
-    }
-    h1{margin:0 0 8px; font-size:20px;}
-    .small{font-size:13px;color:var(--muted);margin-bottom:12px;}
-
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-    #themeBtn, #resetRatingBtn {
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      background: var(--card);
-      box-shadow: var(--shadow);
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    #exitBtn {
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      background: var(--card);
-      box-shadow: var(--shadow);
-      border: none;
-      font-size: 22px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      display: none;
-    }
-    .input-group {
-      flex: 1;
-      display: flex;
-      gap: 8px;
-      min-width: 280px;
-      align-items: center;
-    }
-    textarea#itemInput{
-      flex: 1; min-height:44px; max-height:120px; padding:10px; font-size:15px;
-      border-radius:8px; border:1px solid #dfe3e8; background:var(--card); color:inherit;
-      resize:vertical;
-    }
-    #addBtn{
-      width:48px;height:48px;border-radius:50%; background:var(--accent); color:#fff;
-      font-size:22px; display:none; align-items:center; justify-content:center;
-      cursor:pointer; box-shadow:var(--shadow); flex-shrink:0;
-    }
-    .action-buttons {
-     display: flex;
-     gap: 8px;
-     flex-shrink: 0;
-     justify-content: flex-end;
-    }
-    button.icon{
-      width:44px; height:44px; border-radius:8px; border:none; background:var(--card);
-      box-shadow:var(--shadow); cursor:pointer; display:flex; align-items:center;
-      justify-content:center; font-size:18px; flex-shrink:0;
-    }
-    button.primary{background:var(--accent); color:white;}
-
-    .card{background:var(--card); border-radius:10px; padding:12px; box-shadow:var(--shadow); margin-top:12px;}
-    .flex{display:flex; gap:12px; align-items:center;}
-
-    ul#list{list-style:none; margin:0; padding:0; margin-top:8px;}
-    li.item{
-      position:relative; display:flex; gap:10px; align-items:center; padding:10px; border-radius:8px; margin:5px 0; background:var(--card); border:1px solid rgba(0,0,0,0.04);
-      transition: none; overflow:hidden; touch-action:pan-y;
-      user-select: none;
-    }
-    .handle{cursor: grab;color: #9aa4b2;font-size: 18px;padding: 3px 10px;}
-    .name{font-size:15px; flex:1;}
-    .delete-overlay{
-      position:absolute; left:0; top:0; bottom:0; width:100%; background:var(--danger); color:#fff;
-      display:flex; align-items:center; justify-content:flex-end; padding-right:16px; font-weight:700;
-      opacity:0; pointer-events:none; transition:opacity .15s; border-radius:8px;
-    }
-
-    .moving { transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1); z-index: 10; }
-    .removing { transition: transform 0.3s ease, opacity 0.3s ease; transform: translateY(-40px) scale(0.95); opacity: 0; }
-
-    .choices{display:flex; gap:12px; margin-top:10px;}
-    .item-btn{flex:1; padding:12px; border-radius:8px; border:1px solid #d0d6dc; background:#fafafa; font-size:16px; cursor:pointer;}
-    .round-title{font-size:16px;font-weight:700;margin-bottom:6px;}
-    .meta{color:var(--muted); font-size:13px; margin-top:8px;}
-    #bracket{display:flex; gap:16px; align-items:flex-start; overflow:auto; padding:8px; margin-top:12px;}
-    .bracket-col{min-width:180px; background:#fafafa; border-radius:8px; padding:8px; border:1px solid #eee;}
-    .pair{padding:8px; margin-bottom:8px; border-radius:6px; background:var(--card); border:1px solid #eaecef;}
-    .winner{font-weight:700;color:#1a7f1a;}
-    .loser{color:#777; text-decoration:line-through;}
-    .bye{color:#444; font-style:italic;}
-
-    @media (max-width:600px){
-      .header { flex-direction: column; align-items: stretch; }
-      .input-group { min-width: auto; }
-      #themeBtn, #exitBtn, #addBtn, #resetRatingBtn { width: 44px; height: 44px; font-size: 18px; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Швейцарская сортировка задач</title>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+:root{--bg:#f6f7fb;--card:#ffffff;--muted:#666;--accent:#2b8aee;--danger:#ff4d4f;--success:#4caf50;--shadow:0 6px 18px rgba(16,24,40,0.06);}
+[data-theme="dark"]{--bg:#0f1113;--card:#161718;--muted:#bfc3c8;--accent:#4aa3ff;--danger:#ff6b6b;--success:#66bb6a;--shadow:0 6px 18px rgba(0,0,0,0.6);}
+html,body{height:100%;margin:0;}
+body{font-family:system-ui,Arial,"Segoe UI",Roboto;max-width:980px;margin:20px auto;padding:16px;background:var(--bg);color:#222;}
+h1{margin:0 0 8px;font-size:20px;}
+.small{font-size:13px;color:var(--muted);margin-bottom:12px;}
+.header{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+button.icon{width:44px;height:44px;border-radius:8px;border:none;background:var(--card);box-shadow:var(--shadow);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+button.primary{background:var(--accent);color:white;}
+#themeBtn,#resetRatingBtn{width:44px;height:44px;border-radius:50%;background:var(--card);box-shadow:var(--shadow);}
+#exitBtn{display:none;}
+.input-group{flex:1;display:flex;gap:8px;min-width:280px;align-items:center;}
+textarea#itemInput{flex:1;min-height:44px;max-height:120px;padding:10px;font-size:15px;border-radius:8px;border:1px solid #dfe3e8;background:var(--card);color:inherit;resize:vertical;}
+#addBtn{width:48px;height:48px;border-radius:50%;background:var(--accent);color:#fff;font-size:22px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow);flex-shrink:0;}
+.card{background:var(--card);border-radius:10px;padding:12px;box-shadow:var(--shadow);margin-top:12px;}
+.flex{display:flex;gap:12px;align-items:center;}
+#listsPanel{background:var(--card);border-radius:12px;padding:8px;box-shadow:var(--shadow);margin-bottom:12px;overflow-x:auto;white-space:nowrap;display:flex;align-items:center;position:relative;-webkit-overflow-scrolling:touch;}
+.list-tab{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;background:transparent;color:var(--muted);font-weight:500;transition:all .2s;min-width:120px;justify-content:center;position:relative;touch-action:pan-x;}
+.list-tab.active{background:var(--accent);color:white;font-weight:600;}
+.list-tab.trash{color:var(--danger);}
+.list-tab.trash.active{background:var(--danger);color:white;}
+.list-tab .badge{background:rgba(255,255,255,.3);color:white;font-size:11px;padding:2px 6px;border-radius:8px;}
+.list-tab .delete-list{display:none;position:absolute;right:4px;top:4px;background:var(--danger);color:white;width:20px;height:20px;border-radius:50%;font-size:12px;align-items:center;justify-content:center;cursor:pointer;z-index:10;touch-action:manipulation;}
+.list-tab.delete-mode .delete-list{display:flex;}
+#addListBtn{width:44px;height:44px;border-radius:50%;background:var(--card);box-shadow:var(--shadow);border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;margin-left:8px;flex-shrink:0;}
+ul#list{list-style:none;margin:0;padding:0;margin-top:8px;}
+li.item{position:relative;display:flex;gap:10px;align-items:center;padding:10px;border-radius:8px;margin:5px 0;background:var(--card);border:1px solid rgba(0,0,0,.04);overflow:hidden;touch-action:pan-y;user-select:none;}
+.handle{cursor:grab;color:#9aa4b2;font-size:18px;padding:3px 10px;}
+.name{font-size:15px;flex:1;}
+.delete-overlay,.restore-overlay{position:absolute;left:0;top:0;bottom:0;width:100%;color:#fff;display:flex;align-items:center;padding:0 16px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .15s;border-radius:8px;}
+.delete-overlay{background:var(--danger);justify-content:flex-end;}
+.restore-overlay{background:var(--success);justify-content:flex-start;}
+.removing{transition:transform .3s ease,opacity .3s ease;transform:translateY(-40px) scale(.95);opacity:0;}
+.choices{display:flex;gap:12px;margin-top:10px;}
+.item-btn{flex:1;padding:12px;border-radius:8px;border:1px solid #d0d6dc;background:#fafafa;font-size:16px;cursor:pointer;}
+#bracket{display:flex;gap:16px;align-items:flex-start;overflow:auto;padding:8px;margin-top:12px;}
+.bracket-col{min-width:180px;background:#fafafa;border-radius:8px;padding:8px;border:1px solid #eee;}
+.pair{padding:8px;margin-bottom:8px;border-radius:6px;background:var(--card);border:1px solid #eaecef;}
+.winner{font-weight:700;color:#1a7f1a;}
+.loser{color:#777;text-decoration:line-through;}
+.bye{color:#444;font-style:italic;}
+.action-buttons{display: flex;flex-direction: row;
+justify-content: space-around;}
+@media(max-width:600px){.header{flex-direction:column;align-items:stretch;}.list-tab{min-width:100px;font-size:14px;padding:10px 12px;}}
+</style>
 </head>
 <body data-theme="light">
-  <h1>Швейцарская сортировка задач</h1>
-  <div class="small">Добавляй пункты, запускай сортировку</div>
+<h1>Швейцарская сортировка задач</h1>
 
-  <!-- ШАПКА -->
-  <div class="header">
-    <div class="action-buttons">
-      <button id="startBtn" class="icon primary" title="Начать швейцарскую сортировку">
-        <i data-lucide="shuffle"></i>
-      </button>
-      <button id="exitBtn">
-        <i data-lucide="x"></i>
-      </button>
-      <button id="clearBtn" class="icon" title="Очистить">
-        <i data-lucide="trash-2"></i>
-      </button>
-      <button id="resetRatingBtn" class="icon" title="Сбросить рейтинги (все по 50%)">
-        <i data-lucide="rotate-cw"></i>
-      </button>
-      <button id="themeBtn">
-        <i data-lucide="moon"></i>
-      </button>
-    </div>
-    <div class="input-group">
-      <textarea id="itemInput" placeholder="Добавить пункт или вставить список целиком"></textarea>
-      <button id="addBtn" title="Добавить">
-        <i data-lucide="plus"></i>
-      </button>
-    </div>
+<div id="listsPanel">
+  <div id="listsContainer"></div>
+  <button id="addListBtn" title="Новый список"><i data-lucide="plus"></i></button>
+</div>
+
+<div class="header">
+  <div class="action-buttons">
+    <button id="startBtn" class="icon primary" title="Начать сортировку"><i data-lucide="shuffle"></i></button>
+    <button id="exitBtn"><i data-lucide="x"></i></button>
+    <button id="clearBtn" class="icon" title="Очистить"><i data-lucide="trash-2"></i></button>
+    <button id="resetRatingBtn" class="icon" title="Сбросить рейтинги"><i data-lucide="rotate-cw"></i></button>
+    <button id="themeBtn"><i data-lucide="moon"></i></button>
   </div>
+  <div class="input-group">
+    <textarea id="itemInput" placeholder="Добавить пункт или вставить список"></textarea>
+    <button id="addBtn"><i data-lucide="plus"></i></button>
+  </div>
+</div>
 
-  <!-- СТАТУС РАУНДОВ -->
+<div id="sortCard" class="card" style="display:none;">
+  <div class="round-title" id="roundTitle">Раунд</div>
+  <div class="choices">
+    <button id="leftBtn" class="item-btn"></button>
+    <button id="rightBtn" class="item-btn"></button>
+  </div>
+  <div class="meta">Пара <span id="pairNum">0</span> из <span id="pairMax">0</span></div>
   <div class="flex" style="margin-bottom:12px;">
-    <div class="meta">Раундов: <strong id="roundsNum">0</strong> • Текущий: <strong id="currentRound">0</strong></div>
-  </div>
+  <div class="meta">Раундов: <strong id="roundsNum">0</strong> • Текущий: <strong id="currentRound">0</strong></div>
+</div>
+</div>
 
-  <!-- СПИСОК ПУНКТОВ -->
-  <div id="listPanel" class="card">
-    <strong>Список пунктов</strong>
-    <ul id="list"></ul>
-  </div>
 
-  <!-- СОРТИРОВКА -->
-  <div id="sortCard" class="card" style="display:none;">
-    <div class="round-title" id="roundTitle">Раунд</div>
-    <div class="choices">
-      <button id="leftBtn" class="item-btn"></button>
-      <button id="rightBtn" class="item-btn"></button>
-    </div>
-    <div class="meta">Пара <span id="pairNum">0</span> из <span id="pairMax">0</span></div>
-  </div>
+<div class="card"><ul id="list"></ul></div>
 
-  <div id="ratingDisplay" class="card" style="display:none; margin-top:12px;"></div>
-  <div id="bracket" class="card" style="display:none;"></div>
+<div id="ratingDisplay" class="card" style="display:none;margin-top:12px;"></div>
+<div id="bracket" class="card" style="display:none;"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   lucide.createIcons();
 
-  /* ====== Переменные ====== */
   const K_FACTOR = 32;
-  const PAUSE_BETWEEN_ROUNDS_MS = 0;
-  let items = [];
-  let rating = {};
-  let rounds = [];
-  let roundsResults = [];
-  let curRound = 0;
-  let curPair = 0;
-  let running = false;
-  let sortableInstance = null;
+  let listNames = [], currentListName = '', items = {}, rating = {}, trash = [];
+  let rounds = [], roundsResults = [], curRound = 0, curPair = 0, running = false;
+  let sortable = null;
+  let currentDeleteModeTab = null;
 
-  /* ====== DOM ====== */
+  const listsContainer = document.getElementById('listsContainer');
+  const listEl = document.getElementById('list');
   const itemInput = document.getElementById('itemInput');
   const addBtn = document.getElementById('addBtn');
+  const addListBtn = document.getElementById('addListBtn');
   const clearBtn = document.getElementById('clearBtn');
   const startBtn = document.getElementById('startBtn');
   const resetRatingBtn = document.getElementById('resetRatingBtn');
-  const listEl = document.getElementById('list');
+  const themeBtn = document.getElementById('themeBtn');
+  const exitBtn = document.getElementById('exitBtn');
   const sortCard = document.getElementById('sortCard');
   const leftBtn = document.getElementById('leftBtn');
   const rightBtn = document.getElementById('rightBtn');
@@ -216,355 +123,439 @@ document.addEventListener('DOMContentLoaded', () => {
   const bracketEl = document.getElementById('bracket');
   const roundsNumEl = document.getElementById('roundsNum');
   const currentRoundEl = document.getElementById('currentRound');
-  const themeBtn = document.getElementById('themeBtn');
-  const exitBtn = document.getElementById('exitBtn');
 
-  /* ====== localStorage ====== */
-  function loadState(){
+  function key(l,i){return `${l}|${i}`;}
+  function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+
+  function load(){
     try{
-      const savedItems = localStorage.getItem('swiss_items_v1');
-      if(savedItems) items = JSON.parse(savedItems);
+      listNames=JSON.parse(localStorage.getItem('swiss_lists_v18')||'[]');
+      items=JSON.parse(localStorage.getItem('swiss_items_v18')||'{}');
+      rating=JSON.parse(localStorage.getItem('swiss_rating_v18')||'{}');
+      trash=JSON.parse(localStorage.getItem('swiss_trash_v18')||'[]');
+      currentListName=localStorage.getItem('swiss_cur_v18')||'';
+      const th=localStorage.getItem('swiss_theme')||'light';
+      document.documentElement.setAttribute('data-theme',th);
+      themeBtn.querySelector('i').setAttribute('data-lucide',th==='dark'?'sun':'moon');
+    }catch(e){console.warn(e);}
+    if(listNames.length===0){listNames=['Основной'];items['Основной']=[];}
+    if(!currentListName || !listNames.includes(currentListName)) currentListName=listNames[0];
+  }
+  function save(){
+    localStorage.setItem('swiss_lists_v18',JSON.stringify(listNames));
+    localStorage.setItem('swiss_items_v18',JSON.stringify(items));
+    localStorage.setItem('swiss_rating_v18',JSON.stringify(rating));
+    localStorage.setItem('swiss_trash_v18',JSON.stringify(trash));
+    localStorage.setItem('swiss_cur_v18',currentListName);
+  }
 
-      const savedRatings = localStorage.getItem('swiss_ratings_v1');
-      if(savedRatings) rating = JSON.parse(savedRatings);
+  function stopSortingIfRunning(){
+    if(!running) return true;
+    if(confirm('Сортировка активна. Прервать?')){
+      running=false; resetUI(); return true;
+    }
+    return false;
+  }
 
-      const theme = localStorage.getItem('swiss_theme') || 'light';
-      document.documentElement.setAttribute('data-theme', theme);
-
-      const icon = themeBtn.querySelector('i');
-      if (icon) {
-        icon.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
-        lucide.createIcons();
-      }
-    }catch(e){
-      console.warn('Ошибка загрузки:', e);
-      items = []; rating = {};
+  function hideDeleteButton(){
+    if(currentDeleteModeTab){
+      currentDeleteModeTab.classList.remove('delete-mode');
+      currentDeleteModeTab = null;
     }
   }
 
-  function saveState(){
-    try{
-      localStorage.setItem('swiss_items_v1', JSON.stringify(items));
-      localStorage.setItem('swiss_ratings_v1', JSON.stringify(rating));
-    }catch(e){
-      console.warn('Ошибка сохранения:', e);
-    }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.list-tab') && !e.target.closest('#addListBtn')) hideDeleteButton();
+  });
+
+  function canDeleteList() {
+    return listNames.length > 1;
   }
 
-  /* ====== escape ====== */
-  function escapeHtml(s){
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-  }
-
-  /* ====== renderList ====== */
-  function renderList(){
-    listEl.innerHTML = '';
-    if (sortableInstance) { sortableInstance.destroy(); sortableInstance = null; }
-
-    items.forEach(name => {
-      const li = document.createElement('li');
-      li.className = 'item';
-      li.dataset.name = name;
-      li.innerHTML = `
-        <div class="handle" aria-hidden="true">≡</div>
-        <div class="name">${escapeHtml(name)}</div>
-        <div style="margin-left:8px;color:var(--muted);font-size:13px;">${Math.round(rating[name]||50)}</div>
-        <div class="delete-overlay"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" class="lucide lucide-trash-2"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-        <div class="delete-overlay" style="justify-content:flex-start;background:#2b8aee;padding-left:16px;opacity:0;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;В топ ⭡</div>
+  function renderTabs(){
+    listsContainer.innerHTML = '';
+    listNames.forEach(n => {
+      const tab = document.createElement('div');
+      tab.className = 'list-tab' + (currentListName === n ? ' active' : '');
+      const canDelete = canDeleteList();
+      tab.innerHTML = `
+        <span class="tab-name">${esc(n)}</span>
+        <span class="badge">${(items[n]||[]).length}</span>
+        ${canDelete ? `<div class="delete-list">×</div>` : ''}
       `;
-      listEl.appendChild(li);
-      addSwipeToDelete(li);
+
+      let touchStartTime = 0, isScrolling = false, longPressTriggered = false, longPressTimer;
+
+      const handleTouchStart = e => {
+        touchStartTime = Date.now();
+        isScrolling = false;
+        longPressTriggered = false;
+        if(canDelete){
+          longPressTimer = setTimeout(() => {
+            if(!isScrolling && Date.now() - touchStartTime > 580){
+              hideDeleteButton();
+              tab.classList.add('delete-mode');
+              currentDeleteModeTab = tab;
+              longPressTriggered = true;
+            }
+          }, 600);
+        }
+      };
+
+      const handleTouchMove = e => {
+        const dx = Math.abs(e.touches[0].clientX - e.touches[0].clientX);
+        const dy = Math.abs(e.touches[0].clientY - e.touches[0].clientY);
+        if(dx > 10 || dy > 10){
+          isScrolling = true;
+          clearTimeout(longPressTimer);
+        }
+      };
+
+      const handleTouchEnd = e => {
+        clearTimeout(longPressTimer);
+        if(longPressTriggered){ e.preventDefault(); return; }
+        if(isScrolling) return;
+        if(e.target.classList.contains('delete-list')) return;
+        if(tab.classList.contains('delete-mode')){ hideDeleteButton(); return; }
+        if(currentDeleteModeTab && currentDeleteModeTab !== tab) currentDeleteModeTab.classList.remove('delete-mode');
+        if(stopSortingIfRunning()) switchList(n);
+      };
+
+      tab.addEventListener('touchstart', handleTouchStart, {passive:true});
+      tab.addEventListener('touchmove', handleTouchMove, {passive:true});
+      tab.addEventListener('touchend', handleTouchEnd, {passive:false});
+
+      tab.addEventListener('contextmenu', e => e.preventDefault());
+      tab.addEventListener('mousedown', e => {
+        if(e.button !== 0 || !canDelete) return;
+        longPressTimer = setTimeout(() => {
+          hideDeleteButton();
+          tab.classList.add('delete-mode');
+          currentDeleteModeTab = tab;
+        }, 600);
+      });
+      tab.addEventListener('mouseup', () => clearTimeout(longPressTimer));
+      tab.addEventListener('mouseleave', () => clearTimeout(longPressTimer));
+
+      tab.addEventListener('click', e => {
+        if(e.detail === 0) return;
+        if(e.target.classList.contains('delete-list')) return;
+        if(tab.classList.contains('delete-mode')){ hideDeleteButton(); return; }
+        if(currentDeleteModeTab && currentDeleteModeTab !== tab) currentDeleteModeTab.classList.remove('delete-mode');
+        if(stopSortingIfRunning()) switchList(n);
+      });
+
+      let tapCount = 0;
+      tab.addEventListener('click', e => {
+        if(e.target.classList.contains('delete-list')) return;
+        tapCount++;
+        if(tapCount === 2){
+          hideDeleteButton();
+          renameList(n);
+          tapCount = 0;
+        } else {
+          setTimeout(() => tapCount = 0, 350);
+        }
+      });
+
+      if(canDelete){
+        tab.querySelector('.delete-list').addEventListener('click', e => {
+          e.stopPropagation();
+          hideDeleteButton();
+          if(!stopSortingIfRunning()) return;
+          if(confirm(`Удалить список «${n}» и все его задачи?`)){
+            delete items[n];
+            Object.keys(rating).forEach(k => { if(k.startsWith(n+'|')) delete rating[k]; });
+            listNames = listNames.filter(x => x !== n);
+            if(currentListName === n) switchList(listNames[0]);
+            save(); renderTabs(); renderList(); updateDisplays();
+          }
+        });
+      }
+
+      listsContainer.appendChild(tab);
     });
 
-    sortableInstance = new Sortable(listEl, {
-      handle: '.handle',
-      animation: 150,
-      onEnd: () => {
-        items = Array.from(listEl.children).map(li => li.dataset.name);
-        saveState();
-      }
-    });
+    const trashTab = document.createElement('div');
+    trashTab.className = 'list-tab trash' + (currentListName === 'trash' ? ' active' : '');
+    trashTab.innerHTML = `<i data-lucide="trash-2"></i> Корзина <span class="badge">${trash.length}</span>`;
+    trashTab.addEventListener('click', () => { hideDeleteButton(); if(stopSortingIfRunning()) switchList('trash'); });
+    listsContainer.appendChild(trashTab);
+
     lucide.createIcons();
   }
 
-  /* ====== FLIP анимации ====== */
-  function moveToTopWithAnimation(li) {
-    const name = li.dataset.name;
-    if (items[0] === name) return;
+  function renameList(oldName){
+    if(!stopSortingIfRunning()) return;
+    const neu = prompt('Новое название списка', oldName);
+    if(!neu || neu.trim() === oldName) return;
+    const newName = neu.trim();
+    if(!newName){ alert('Имя не может быть пустым'); return; }
+    if(listNames.includes(newName)){ alert('Список с таким именем уже существует'); return; }
 
-    const rectBefore = li.getBoundingClientRect();
-    items = items.filter(x => x !== name);
-    items.unshift(name);
-    saveState();
-    renderList();
-
-    const newLi = listEl.querySelector(`[data-name="${name}"]`);
-    const rectAfter = newLi.getBoundingClientRect();
-    const deltaY = rectBefore.top - rectAfter.top;
-
-    newLi.style.transform = `translateY(${deltaY}px)`;
-    newLi.classList.add('moving');
-    requestAnimationFrame(() => { newLi.style.transform = ''; });
-    newLi.addEventListener('transitionend', () => newLi.classList.remove('moving'), { once: true });
+    const idx = listNames.indexOf(oldName);
+    listNames[idx] = newName;
+    items[newName] = items[oldName]; delete items[oldName];
+    Object.keys(rating).forEach(k => {
+      if(k.startsWith(oldName+'|')){
+        const item = k.slice(oldName.length + 1);
+        rating[newName+'|'+item] = rating[k];
+        delete rating[k];
+      }
+    });
+    if(currentListName === oldName) currentListName = newName;
+    save(); renderTabs(); renderList(); updateDisplays();
   }
 
-  function removeWithAnimation(li) {
-    li.classList.add('removing');
-    li.addEventListener('transitionend', () => {
-      const name = li.dataset.name;
-      items = items.filter(x => x !== name);
-      delete rating[name];
-      saveState();
-      renderList();
-    }, { once: true });
+  function switchList(n){
+    if(currentListName === n) return;
+    currentListName = n;
+    save(); renderTabs(); renderList(); updateDisplays();
   }
 
-  /* ====== Редактирование ====== */
-  function editItem(li) {
-    const name = li.dataset.name;
-    const newName = prompt('Редактировать пункт', name);
-    if(!newName?.trim()) return;
-    const trimmed = newName.trim();
-    if(trimmed === name) return;
-    if(items.includes(trimmed)){ alert('Такой пункт уже есть'); return; }
-    const idx = items.indexOf(name);
-    items[idx] = trimmed;
-    rating[trimmed] = rating[name] || 50;
-    delete rating[name];
-    saveState();
-    renderList();
+  function renderList(){
+    listEl.innerHTML = '';
+    if(sortable){ sortable.destroy(); sortable=null; }
+    const isTrash = currentListName === 'trash';
+    const data = isTrash ? trash.map((t,i)=>({...t,idx:i})) : (items[currentListName]||[]).map(n=>({name:n}));
+
+    data.forEach(o => {
+      const li = document.createElement('li'); li.className='item';
+      if(isTrash){
+        li.dataset.idx = o.idx;
+        li.innerHTML = `<div class="name" style="flex:1;">${esc(o.name)}</div><div style="color:var(--muted);font-size:12px;">из «${esc(o.fromList)}»</div><div class="restore-overlay"><i data-lucide="rotate-cw"></i> Восстановить</div><div class="delete-overlay"><i data-lucide="trash-2"></i> Удалить навсегда</div>`;
+        addTrashSwipe(li);
+      } else {
+        li.dataset.name = o.name;
+        const r = rating[key(currentListName,o.name)] || 50;
+        li.innerHTML = `
+          <div class="name">${esc(o.name)}</div>
+          <div style="margin-left:8px;color:var(--muted);font-size:13px;">${Math.round(r)}</div>
+          <div class="handle">≡</div>
+          <div class="delete-overlay"><i data-lucide="trash-2"></i></div>
+          <div class="delete-overlay" style="background:#2b8aee;justify-content:flex-start;">В топ</div>
+        `;
+        addItemTouchEdit(li);
+        addItemSwipe(li);
+      }
+      listEl.appendChild(li);
+    });
+
+    if(!isTrash){
+      sortable = new Sortable(listEl, {handle:'.handle', animation:150, onEnd:()=>{items[currentListName]=Array.from(listEl.children).map(li=>li.dataset.name);save();}});
+    }
+    lucide.createIcons();
   }
 
-  /* ====== Свайпы ====== */
-  function addSwipeToDelete(li){
-    let startX = 0, curX = 0, moved = false, swiping = false;
-    const deleteOverlay = li.children[3];
-    const topOverlay = li.children[4];
+  // === Редактирование только при чётком тапе ===
+  function addItemTouchEdit(li){
+    const nameEl = li.querySelector('.name');
+    let startX = 0, startY = 0, startTime = 0;
+    let moved = false;
+    const threshold = 8;
 
-    let pressTimer;
-    const startLongPress = () => {
-      pressTimer = setTimeout(() => {
-        if (moved || swiping) return;
-        editItem(li);
-      }, 600);
+    const handleStart = e => {
+      startX = e.touches ? e.touches[0].clientX : e.clientX;
+      startY = e.touches ? e.touches[0].clientY : e.clientY;
+      startTime = Date.now();
+      moved = false;
     };
 
-    let clickCount = 0;
-    let clickTimer;
-    li.addEventListener('click', e => {
-      if (e.target.closest('.handle')) return;
-      if (swiping) return;
-      clickCount++;
-      if (clickCount === 1) {
-        clickTimer = setTimeout(() => { clickCount = 0; }, 300);
-      } else if (clickCount === 2) {
-        clearTimeout(clickTimer);
-        clickCount = 0;
-        if (moved) return;
-        editItem(li);
+    const handleMove = e => {
+      if(!startTime) return;
+      const x = e.touches ? e.touches[0].clientX : e.clientX;
+      const y = e.touches ? e.touches[0].clientY : e.clientY;
+      if(Math.abs(x - startX) > threshold || Math.abs(y - startY) > threshold){
+        moved = true;
       }
-    });
+    };
 
-    li.addEventListener('touchstart', e => {
-      if (e.target.closest('.handle')) return;
-      startLongPress();
-      swiping = true;
-      startX = e.touches[0].clientX;
-      li.style.transition = 'none';
-    });
+    const handleEnd = e => {
+      if(!startTime) return;
+      const duration = Date.now() - startTime;
+      const x = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+      const y = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+      const dx = Math.abs(x - startX);
+      const dy = Math.abs(y - startY);
 
-    li.addEventListener('touchmove', e => {
-      if (!swiping) return;
-      curX = e.touches[0].clientX;
-      const dx = curX - startX;
-      if (Math.abs(dx) > 8) {
+      if(!moved && duration < 500 && dx < threshold && dy < threshold){
+        if(stopSortingIfRunning()){
+          e.preventDefault();
+          editItem(li);
+        }
+      }
+      startTime = 0;
+    };
+
+    nameEl.addEventListener('touchstart', handleStart, {passive:true});
+    nameEl.addEventListener('mousedown', handleStart);
+
+    nameEl.addEventListener('touchmove', handleMove, {passive:true});
+    nameEl.addEventListener('mousemove', handleMove);
+
+    nameEl.addEventListener('touchend', handleEnd);
+    nameEl.addEventListener('mouseup', handleEnd);
+    nameEl.addEventListener('touchcancel', handleEnd);
+  }
+
+  function editItem(li){
+    const old = li.dataset.name;
+    const neu = prompt('Редактировать', old);
+    if(!neu || neu.trim() === old) return;
+    const n = neu.trim();
+    if(items[currentListName].includes(n)){ alert('Уже есть'); return; }
+    const i = items[currentListName].indexOf(old);
+    items[currentListName][i] = n;
+    if(rating[key(currentListName,old)] !== undefined){
+      rating[key(currentListName,n)] = rating[key(currentListName,old)];
+      delete rating[key(currentListName,old)];
+    }
+    save(); renderList();
+  }
+
+  function addItemSwipe(li){
+    let sx=0,sy=0,moved=false,swiping=false;
+
+    const start = e => {
+      if(e.target.closest('.handle')) return;
+      swiping = true; sx = e.touches[0].clientX; sy = e.touches[0].clientY;
+      li.style.transition = 'none'; moved = false;
+    };
+
+    const move = e => {
+      if(!swiping) return;
+      const dx = e.touches[0].clientX - sx;
+      const dy = e.touches[0].clientY - sy;
+      if(!moved && Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)){
+        swiping = false; li.style.transition = ''; return;
+      }
+      if(Math.abs(dx) > 8){
         moved = true;
         li.style.transform = `translateX(${dx}px)`;
-        deleteOverlay.style.opacity = dx < 0 ? Math.min(Math.abs(dx)/80, 1) : 0;
-        topOverlay.style.opacity = dx > 0 ? Math.min(dx/80, 1) : 0;
+        li.children[3].style.opacity = dx < 0 ? Math.min(Math.abs(dx)/80,1) : 0;
+        li.children[4].style.opacity = dx > 0 ? Math.min(dx/80,1) : 0;
       }
-    });
+    };
 
-    li.addEventListener('touchend', () => {
-      if (swiping) {
-        const dx = curX - startX;
-        li.style.transition = 'transform 0.2s ease';
-        li.style.transform = '';
-        deleteOverlay.style.opacity = 0;
-        topOverlay.style.opacity = 0;
-        if (moved && dx < -80) removeWithAnimation(li);
-        else if (moved && dx > 80) moveToTopWithAnimation(li);
-      }
-      clearTimeout(pressTimer);
-      moved = false;
+    const end = () => {
+      if(!swiping) return;
+      const dx = li.style.transform ? parseFloat(li.style.transform.match(/-?\d+\.?\d*/g)[0] || 0) : 0;
+      li.style.transition = 'transform .2s ease'; li.style.transform = '';
+      li.children[3].style.opacity = li.children[4].style.opacity = 0;
+      if(moved && dx < -80) moveToTrash(li);
+      else if(moved && dx > 80) moveToTop(li);
       swiping = false;
-    });
+    };
 
-    li.addEventListener('touchcancel', () => {
-      clearTimeout(pressTimer);
-      moved = false;
-      swiping = false;
+    li.addEventListener('touchstart', start, {passive:true});
+    li.addEventListener('touchmove', move, {passive:true});
+    li.addEventListener('touchend', end);
+  }
+
+  function addTrashSwipe(li){
+    let sx=0,sy=0,moved=false,swiping=false;
+    const restore = li.querySelector('.restore-overlay'), del = li.querySelector('.delete-overlay');
+
+    li.addEventListener('touchstart', e=>{swiping=true;sx=e.touches[0].clientX;sy=e.touches[0].clientY;li.style.transition='none';moved=false;}, {passive:true});
+    li.addEventListener('touchmove', e=>{
+      if(!swiping) return;
+      const dx=e.touches[0].clientX-sx, dy=e.touches[0].clientY-sy;
+      if(!moved && Math.abs(dy)>10 && Math.abs(dy)>Math.abs(dx)){swiping=false;li.style.transition='';return;}
+      if(Math.abs(dx)>8){moved=true;li.style.transform=`translateX(${dx}px)`;restore.style.opacity=dx>0?Math.min(dx/80,1):0;del.style.opacity=dx<0?Math.min(Math.abs(dx)/80,1):0;}
+    }, {passive:true});
+    li.addEventListener('touchend', ()=>{
+      if(!swiping) return;
+      const dx=li.style.transform?parseFloat(li.style.transform.match(/-?\d+\.?\d*/g)[0] || 0):0;
+      li.style.transition='transform .2s ease'; li.style.transform=''; restore.style.opacity=del.style.opacity=0;
+      if(moved&&dx>80) restoreFromTrash(li);
+      else if(moved&&dx<-80) deleteForever(li);
+      swiping=false;
     });
   }
 
-  /* ====== Добавление ====== */
-  function addItemsFromInput(){
-    const lines = itemInput.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-    let added = false;
-    lines.forEach(line => {
-      if(!items.includes(line)){
-        items.push(line);
-        rating[line] = 50;
-        added = true;
-      }
-    });
-    if(added){ saveState(); renderList(); }
-    itemInput.value = ''; addBtn.style.display = 'none'; itemInput.focus();
+  function moveToTrash(li){const n=li.dataset.name;li.classList.add('removing');li.ontransitionend=()=>{items[currentListName]=items[currentListName].filter(x=>x!==n);delete rating[key(currentListName,n)];trash.push({name:n,fromList:currentListName});save();renderList();renderTabs();};}
+  function moveToTop(li){const n=li.dataset.name;if(items[currentListName][0]===n)return;items[currentListName]=items[currentListName].filter(x=>x!==n);items[currentListName].unshift(n);save();renderList();}
+  function restoreFromTrash(li){const i=+li.dataset.idx;const it=trash[i];li.classList.add('removing');li.ontransitionend=()=>{trash.splice(i,1);if(!items[it.fromList])items[it.fromList]=[];items[it.fromList].push(it.name);save();renderList();renderTabs();};}
+  function deleteForever(li){const i=+li.dataset.idx;li.classList.add('removing');li.ontransitionend=()=>{trash.splice(i,1);save();renderList();renderTabs();};}
+
+  function addItems(){
+    if(currentListName==='trash' || !stopSortingIfRunning()) return;
+    const lines=itemInput.value.split('\n').map(s=>s.trim()).filter(Boolean);
+    lines.forEach(l=>{if(!items[currentListName].includes(l)){items[currentListName].push(l);rating[key(currentListName,l)]=50;}});
+    if(lines.length){save();renderList();renderTabs();}
+    itemInput.value=''; addBtn.style.display='none';
   }
-  itemInput.addEventListener('input', () => addBtn.style.display = itemInput.value.trim() ? 'flex' : 'none');
-  itemInput.addEventListener('keydown', e => { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); addItemsFromInput(); } });
-  addBtn.addEventListener('click', addItemsFromInput);
+  itemInput.addEventListener('input',()=>{addBtn.style.display=itemInput.value.trim()?'flex':'none';});
+  itemInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();addItems();}});
+  addBtn.onclick=addItems;
 
-  clearBtn.addEventListener('click', () => {
-    if(confirm('Очистить список?')){
-      items = []; rating = {};
-      localStorage.removeItem('swiss_items_v1');
-      localStorage.removeItem('swiss_ratings_v1');
-      renderList();
-      resetUiAfterStop();
-    }
-  });
+  addListBtn.onclick=()=>{if(!stopSortingIfRunning())return;const n=prompt('Название списка');if(!n?.trim())return;const name=n.trim();if(listNames.includes(name)){alert('Уже есть');return;}listNames.push(name);items[name]=[];save();switchList(name);};
 
-  resetRatingBtn.addEventListener('click', () => {
-    if (!items.length) return;
-    if (!confirm('Сбросить рейтинги всех задач до 50%?')) return;
-    items.forEach(name => { rating[name] = 50; });
-    saveState();
-    renderList();
-    if (running) { prepareSwissRounds(); curRound = 0; curPair = 0; runRounds(); }
-    else updateDisplays();
-  });
+  clearBtn.onclick=()=>{if(!stopSortingIfRunning())return;if(currentListName==='trash'){if(confirm('Очистить корзину навсегда?')){trash=[];save();renderList();renderTabs();}}else if(confirm('Очистить список?')){items[currentListName]=[];Object.keys(rating).forEach(k=>{if(k.startsWith(currentListName+'|'))delete rating[k];});save();renderList();renderTabs();}};
 
-  themeBtn.addEventListener('click', () => {
-    const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', cur);
-    localStorage.setItem('swiss_theme', cur);
-    const icon = themeBtn.querySelector('i');
-    if (icon) {
-      icon.setAttribute('data-lucide', cur === 'dark' ? 'sun' : 'moon');
-      lucide.createIcons();
-    }
-  });
+  resetRatingBtn.onclick=()=>{if(currentListName==='trash')return;if(!confirm('Сбросить рейтинги до 50?'))return;(items[currentListName]||[]).forEach(n=>rating[key(currentListName,n)]=50);save();renderList();if(running){prepareRounds();curRound=curPair=0;runRounds();}else updateDisplays();};
 
-  exitBtn.addEventListener('click', () => {
-    if (!running) return;
-    if (!confirm('Прервать сортировку?')) return;
-    running = false;
-    resetUiAfterStop();
-    exitBtn.style.display = 'none';
-    startBtn.disabled = false;
-  });
+  themeBtn.onclick=()=>{
+    const cur=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme',cur);
+    localStorage.setItem('swiss_theme',cur);
+    themeBtn.querySelector('i').setAttribute('data-lucide',cur==='dark'?'sun':'moon');
+    lucide.createIcons();
+  };
 
-  /* ====== ШВЕЙЦАРСКАЯ СОРТИРОВКА ====== */
-  function prepareSwissRounds(){
-    items.forEach(n => { if(!rating[n]) rating[n] = 50; });
-    const roundsNeeded = Math.ceil(Math.log2(Math.max(2, items.length)));
-    roundsNumEl.textContent = roundsNeeded;
-    rounds = []; roundsResults = [];
-    for(let r=0; r<roundsNeeded; r++){
-      const order = [...items].sort((a,b) => (rating[b] - rating[a]) + (Math.random()-0.5)*1e-3);
-      const pairs = [];
-      for(let i=0;i<order.length;i+=2){
-        pairs.push(i+1 < order.length ? [order[i], order[i+1]] : [order[i], null]);
-      }
-      rounds.push(pairs);
-      roundsResults.push(new Array(pairs.length).fill(null));
+  function prepareRounds(){
+    const arr=items[currentListName]||[];
+    arr.forEach(n=>{if(rating[key(currentListName,n)]===undefined)rating[key(currentListName,n)]=50;});
+    const needed=Math.ceil(Math.log2(Math.max(2,arr.length)));
+    roundsNumEl.textContent=needed; rounds=[]; roundsResults=[];
+    for(let r=0;r<needed;r++){
+      const order=[...arr].sort((a,b)=>(rating[key(currentListName,b)]-rating[key(currentListName,a)])+(Math.random()-0.5)*1e-3);
+      const pairs=[];
+      for(let i=0;i<order.length;i+=2) pairs.push(i+1<order.length?[order[i],order[i+1]]:[order[i],null]);
+      rounds.push(pairs); roundsResults.push(new Array(pairs.length).fill(null));
     }
   }
 
   async function runRounds(){
-    sortCard.style.display = 'block'; ratingDisplay.style.display = 'block'; bracketEl.style.display = 'block';
-    exitBtn.style.display = 'flex';
-    while(running && curRound < rounds.length){
-      const roundPairs = rounds[curRound];
-      currentRoundEl.textContent = curRound + 1;
-      pairMax.textContent = roundPairs.length;
-      curPair = 0;
-      renderBracketPartial(); updateDisplays();
-      while(running && curPair < roundPairs.length){
-        pairNum.textContent = curPair + 1;
-        roundTitle.textContent = `Раунд ${curRound+1} — пара ${curPair+1}`;
-        const [a,b] = roundPairs[curPair];
-        if(!b){
-          rating[a] = (rating[a] || 50) + 8;
-          roundsResults[curRound][curPair] = a;
-          curPair++; updateDisplays(); await sleep(150); continue;
-        }
-        leftBtn.textContent = a; rightBtn.textContent = b;
-        await waitForChoice(a,b,curRound,curPair);
-        updateDisplays(); curPair++;
-        if(PAUSE_BETWEEN_ROUNDS_MS) await sleep(PAUSE_BETWEEN_ROUNDS_MS);
+    sortCard.style.display='block'; ratingDisplay.style.display='block'; bracketEl.style.display='block'; exitBtn.style.display='flex';
+    while(running && curRound<rounds.length){
+      currentRoundEl.textContent=curRound+1; pairMax.textContent=rounds[curRound].length; curPair=0;
+      renderBracket(); updateDisplays();
+      while(running && curPair<rounds[curRound].length){
+        pairNum.textContent=curPair+1; roundTitle.textContent=`Раунд ${curRound+1} — пара ${curPair+1}`;
+        const [a,b]=rounds[curRound][curPair];
+        if(!b){rating[key(currentListName,a)]+=8; roundsResults[curRound][curPair]=a; curPair++; updateDisplays(); await sleep(150); continue;}
+        leftBtn.textContent=a; rightBtn.textContent=b;
+        await new Promise(res=>{
+          const clean=()=>{leftBtn.onclick=rightBtn.onclick=null;};
+          leftBtn.onclick=()=>{elo(a,b);roundsResults[curRound][curPair]=a;clean();res();};
+          rightBtn.onclick=()=>{elo(b,a);roundsResults[curRound][curPair]=b;clean();res();};
+        });
+        curPair++; updateDisplays();
       }
-      if(running) rebuildRemainingRounds(curRound+1);
       curRound++;
     }
-    if(running) finalize();
-    else { exitBtn.style.display = 'none'; }
+    if(running) finalize(); else exitBtn.style.display='none';
   }
 
-  function waitForChoice(a,b,ri,pi){
-    return new Promise(res => {
-      const clean = () => { leftBtn.onclick = null; rightBtn.onclick = null; };
-      leftBtn.onclick = () => { applyElo(a,b); roundsResults[ri][pi] = a; clean(); res(); };
-      rightBtn.onclick = () => { applyElo(b,a); roundsResults[ri][pi] = b; clean(); res(); };
-    });
+  function elo(w,l){
+    const Rw=rating[key(currentListName,w)]||50, Rl=rating[key(currentListName,l)]||50;
+    const Ew=1/(1+Math.pow(10,(Rl-Rw)/400));
+    rating[key(currentListName,w)]=Rw+K_FACTOR*(1-Ew);
+    rating[key(currentListName,l)]=Rl+K_FACTOR*(0-(1-Ew));
+    if(rating[key(currentListName,l)]<1) rating[key(currentListName,l)]=1;
+    save();
   }
 
-  function applyElo(w,l){
-    const Rw = rating[w] || 50, Rl = rating[l] || 50;
-    const Ew = 1/(1 + Math.pow(10, (Rl - Rw)/400));
-    rating[w] = Rw + K_FACTOR*(1 - Ew);
-    rating[l] = Rl + K_FACTOR*(0 - (1-Ew));
-    if(rating[l] < 1) rating[l] = 1;
-    saveState();
-  }
-
-  function rebuildRemainingRounds(start){
-    const remaining = rounds.length - start;
-    if(remaining <= 0) return;
-    const newTail = [];
-    for(let r=0;r<remaining;r++){
-      const order = [...items].sort((a,b) => (rating[b] - rating[a]) + (Math.random()-0.5)*1e-3);
-      const pairs = [];
-      for(let i=0;i<order.length;i+=2){
-        pairs.push(i+1 < order.length ? [order[i], order[i+1]] : [order[i], null]);
-      }
-      newTail.push(pairs);
-    }
-    rounds.splice(start, remaining, ...newTail);
-    roundsResults.splice(start, remaining, ...newTail.map(p=>new Array(p.length).fill(null)));
-  }
-
-  function renderBracketPartial(){
-    bracketEl.innerHTML = '';
+  function renderBracket(){
+    bracketEl.innerHTML='';
     for(let r=0;r<rounds.length;r++){
-      const col = document.createElement('div'); col.className = 'bracket-col';
-      col.innerHTML = `<strong>Раунд ${r+1}</strong>`;
-      const pairs = rounds[r], results = roundsResults[r] || [];
-      pairs.forEach((p,i) => {
-        const [a,b] = p; const winner = results[i];
-        const div = document.createElement('div'); div.className = 'pair';
-        if(!b){
-          div.innerHTML = `<div class="bye">${escapeHtml(a)} — бай</div>` + (winner ? `<div class="winner">Победил: ${escapeHtml(winner)}</div>` : '');
-        } else {
-          const aClass = winner === a ? 'winner' : (winner ? 'loser' : '');
-          const bClass = winner === b ? 'winner' : (winner ? 'loser' : '');
-          div.innerHTML = `<div class="${aClass}">${escapeHtml(a)} ${aClass? '('+Math.round(rating[a])+')':''}</div>
-                           <div style="margin-top:6px;" class="${bClass}">${escapeHtml(b)} ${bClass? '('+Math.round(rating[b])+')':''}</div>`;
-        }
+      const col=document.createElement('div'); col.className='bracket-col'; col.innerHTML=`<strong>Раунд ${r+1}</strong>`;
+      rounds[r].forEach((p,i)=>{
+        const [a,b]=p; const win=roundsResults[r][i];
+        const div=document.createElement('div'); div.className='pair';
+        if(!b) div.innerHTML=`<div class="bye">${esc(a)} — бай</div>`;
+        else div.innerHTML=`<div class="${win===a?'winner':win?'loser':''}">${esc(a)}</div><div style="margin-top:6px;" class="${win===b?'winner':win?'loser':''}">${esc(b)}</div>`;
         col.appendChild(div);
       });
       bracketEl.appendChild(col);
@@ -572,65 +563,54 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateDisplays(){
-    const sorted = [...items].sort((a,b) => (rating[b]||50) - (rating[a]||50));
-    if (sorted.length === 0) { ratingDisplay.innerHTML = ''; return; }
-
-    const ratings = sorted.map(n => rating[n] || 50);
-    const min = Math.min(...ratings);
-    const max = Math.max(...ratings);
-    const range = max - min || 1;
-
-    let html = '<h3>Приоритет задач</h3><ol>';
-    sorted.forEach(n => {
-      const raw = rating[n] || 50;
-      const percent = Math.round(((raw - min) / range) * 100);
-      const stars = '★★★★★'.substring(0, Math.round(percent / 20)) + '☆☆☆☆☆'.substring(0, 5 - Math.round(percent / 20));
-      const color = percent >= 80 ? '#d32f2f' : percent >= 60 ? '#f57c00' : percent >= 40 ? '#388e3c' : '#666';
-      html += `<li style="color:${color};font-weight:500;">
-                 <strong>${escapeHtml(n)}</strong> — ${percent}% ${stars}
-               </li>`;
+    if(currentListName==='trash'){ratingDisplay.innerHTML='';return;}
+    const arr=items[currentListName]||[];
+    const sorted=[...arr].sort((a,b)=>(rating[key(currentListName,b)]||50)-(rating[key(currentListName,a)]||50));
+    if(!sorted.length){ratingDisplay.innerHTML='';return;}
+    const vals=sorted.map(n=>rating[key(currentListName,n)]||50);
+    const min=Math.min(...vals), max=Math.max(...vals), range=max-min||1;
+    let html='<h3>Приоритет задач</h3><ol>';
+    sorted.forEach(n=>{
+      const v=rating[key(currentListName,n)]||50;
+      const p=Math.round((v-min)/range*100);
+      const stars='★★★★★'.substring(0,Math.round(p/20))+'☆☆☆☆☆'.substring(0,5-Math.round(p/20));
+      html+=`<li style="color:${p>=80?'#d32f2f':p>=60?'#f57c00':p>=40?'#388e3c':'#666'};font-weight:500;"><strong>${esc(n)}</strong> — ${p}% ${stars}</li>`;
     });
-    html += '</ol>';
-    ratingDisplay.innerHTML = html;
+    html+='</ol>'; ratingDisplay.innerHTML=html;
   }
 
   function finalize(){
-    running = false; startBtn.disabled = false; sortCard.style.display = 'none';
-    roundsNumEl.textContent = '0'; currentRoundEl.textContent = '0';
-    items.sort((a,b) => (rating[b]||50) - (rating[a]||50));
-    saveState();
-    renderList(); renderBracketPartial();
-    ratingDisplay.style.display = 'block'; bracketEl.style.display = 'block';
-    exitBtn.style.display = 'none';
+    running=false; startBtn.disabled=false; sortCard.style.display='none';
+    roundsNumEl.textContent='0'; currentRoundEl.textContent='0';
+    items[currentListName].sort((a,b)=>(rating[key(currentListName,b)]||50)-(rating[key(currentListName,a)]||50));
+    save(); renderList(); renderBracket(); ratingDisplay.style.display='block'; bracketEl.style.display='block'; exitBtn.style.display='none';
     alert('Сортировка завершена!');
   }
 
-  function resetUiAfterStop(){
-    running = false; startBtn.disabled = false;
-    sortCard.style.display = 'none'; ratingDisplay.style.display = 'none'; bracketEl.style.display = 'none';
-    rounds = []; roundsResults = []; roundsNumEl.textContent = '0'; currentRoundEl.textContent = '0';
+  function resetUI(){
+    running=false; startBtn.disabled=false;
+    sortCard.style.display='none'; ratingDisplay.style.display='none'; bracketEl.style.display='none';
+    rounds=[]; roundsResults=[]; roundsNumEl.textContent='0'; currentRoundEl.textContent='0';
   }
 
-  function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+  function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
-  startBtn.addEventListener('click', () => {
-    if(items.length < 2){ alert('Нужно минимум два пункта'); return; }
+  startBtn.onclick=()=>{
+    if(currentListName==='trash' || (items[currentListName]||[]).length<2){alert('Нужно минимум два пункта');return;}
     if(running) return;
-    prepareSwissRounds(); curRound = 0; curPair = 0; running = true; startBtn.disabled = true;
-    sortCard.style.display = 'block'; ratingDisplay.style.display='block'; bracketEl.style.display='block';
-    exitBtn.style.display = 'flex';
+    prepareRounds(); curRound=curPair=0; running=true; startBtn.disabled=true;
+    sortCard.style.display='block'; ratingDisplay.style.display='block'; bracketEl.style.display='block'; exitBtn.style.display='flex';
     runRounds();
-  });
+  };
 
-  /* ====== Инициализация ====== */
-  loadState();
+  exitBtn.onclick=()=>{if(confirm('Прервать сортировку?')){running=false;resetUI();exitBtn.style.display='none';startBtn.disabled=false;}};
+
+  load();
+  renderTabs();
   renderList();
-  ratingDisplay.style.display = 'none';
-  bracketEl.style.display = 'none';
-  addBtn.style.display = 'none';
+  addBtn.style.display='none';
   itemInput.focus();
-  exitBtn.style.display = 'none';
-
+  exitBtn.style.display='none';
 });
 </script>
 </body>
