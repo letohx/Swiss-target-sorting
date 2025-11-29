@@ -9,18 +9,18 @@
 :root{--bg:#f6f7fb;--card:#ffffff;--muted:#666;--accent:#2b8aee;--danger:#ff4d4f;--success:#4caf50;--shadow:0 6px 18px rgba(16,24,40,0.06);}
 [data-theme="dark"]{--bg:#0f1113;--card:#161718;--muted:#bfc3c8;--accent:#4aa3ff;--danger:#ff6b6b;--success:#66bb6a;--shadow:0 6px 18px rgba(0,0,0,0.6);}
 html,body{height:100%;margin:0;}
-body{font-family:system-ui,Arial,"Segoe UI",Roboto;max-width:980px;margin:20px auto;padding:16px;background:var(--bg);color:#222;}
+body{font-family:system-ui,Arial,"Segoe UI",Roboto;max-width:980px;margin:20px auto;padding:16px;background:var(--bg);color:#222;position:relative;}
 h1{margin:0 0 8px;font-size:20px;}
 .small{font-size:13px;color:var(--muted);margin-bottom:12px;}
-.header{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+.header{display:flex;align-items:center;gap:12px;margin-bottom:5px;flex-wrap:wrap;}
 button.icon{width:44px;height:44px;border-radius:8px;border:none;background:var(--card);box-shadow:var(--shadow);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
 button.primary{background:var(--accent);color:white;}
 #themeBtn,#resetRatingBtn{width:44px;height:44px;border-radius:50%;background:var(--card);box-shadow:var(--shadow);}
 #exitBtn{display:none;}
 .input-group{flex:1;display:flex;gap:8px;min-width:280px;align-items:center;}
-textarea#itemInput{flex:1;min-height:44px;max-height:120px;padding:10px;font-size:15px;border-radius:8px;border:1px solid #dfe3e8;background:var(--card);color:inherit;resize:vertical;}
+textarea#itemInput{flex:1;min-height:44px;max-height:120px;padding:10px;font-size:15px;border-radius:8px;border:1px solid #dfe3e8;background:var(--card);color:inherit;resize:vertical;box-shadow: var(--shadow);}
 #addBtn{width:48px;height:48px;border-radius:50%;background:var(--accent);color:#fff;font-size:22px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow);flex-shrink:0;}
-.card{background:var(--card);border-radius:10px;padding:12px;box-shadow:var(--shadow);margin-top:12px;}
+.card{border-radius:10px;margin-top:28px;padding-bottom: 80px;}
 .flex{display:flex;gap:12px;align-items:center;}
 #listsPanel{background:var(--card);border-radius:12px;padding:8px;box-shadow:var(--shadow);margin-bottom:12px;overflow-x:auto;white-space:nowrap;display:flex;align-items:center;position:relative;-webkit-overflow-scrolling:touch;}
 .list-tab{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;background:transparent;color:var(--muted);font-weight:500;transition:all .2s;min-width:120px;justify-content:center;position:relative;touch-action:pan-x;}
@@ -32,7 +32,7 @@ textarea#itemInput{flex:1;min-height:44px;max-height:120px;padding:10px;font-siz
 .list-tab.delete-mode .delete-list{display:flex;}
 #addListBtn{width:44px;height:44px;border-radius:50%;background:var(--card);box-shadow:var(--shadow);border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;margin-left:8px;flex-shrink:0;}
 ul#list{list-style:none;margin:0;padding:0;margin-top:8px;}
-li.item{position:relative;display:flex;gap:10px;align-items:center;padding:10px;border-radius:8px;margin:5px 0;background:var(--card);border:1px solid rgba(0,0,0,.04);overflow:hidden;touch-action:pan-y;user-select:none;}
+li.item{position:relative;display:flex;gap:10px;align-items:center;padding:10px;border-radius:8px;margin:5px 0;background:var(--card);border:1px solid rgba(0,0,0,.04);overflow:hidden;touch-action:pan-y;user-select:none;box-shadow: var(--shadow);}
 .handle{cursor:grab;color:#9aa4b2;font-size:18px;padding:3px 10px;}
 .name{font-size:15px;flex:1;}
 .delete-overlay,.restore-overlay{position:absolute;left:0;top:0;bottom:0;width:100%;color:#fff;display:flex;align-items:center;padding:0 16px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .15s;border-radius:8px;}
@@ -47,9 +47,79 @@ li.item{position:relative;display:flex;gap:10px;align-items:center;padding:10px;
 .winner{font-weight:700;color:#1a7f1a;}
 .loser{color:#777;text-decoration:line-through;}
 .bye{color:#444;font-style:italic;}
-.action-buttons{display: flex;flex-direction: row;
-justify-content: space-around;}
-@media(max-width:600px){.header{flex-direction:column;align-items:stretch;}.list-tab{min-width:100px;font-size:14px;padding:10px 12px;}}
+.action-buttons{display:flex;flex-direction:row;justify-content:space-around;}
+
+/* Фиксированная кнопка в правом нижнем углу */
+#floatingBtn {
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:1000;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:var(--accent);
+  color:white;
+  border:none;
+  box-shadow:0 8px 25px rgba(43,138,238,0.4);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  transition:all .3s ease;
+}
+#floatingBtn:hover {transform:scale(1.1);box-shadow:0 12px 30px rgba(43,138,238,0.5);}
+#floatingBtn i {pointer-events:none;}
+
+/* Модальное окно для точной бинарной вставки */
+#insertSortCard {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.75);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+}
+#insertSortInner {
+  background:var(--card);
+  border-radius:16px;
+  padding:32px;
+  max-width:90%;
+  width:460px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.4);
+  text-align:center;
+}
+#insertSortInner h3 {margin:0 0 20px;font-size:19px;}
+#insertChoices {display:flex;gap:18px;margin:24px 0;}
+#insertLeftBtn,#insertRightBtn {
+  flex:1;
+  padding:18px;
+  border-radius:12px;
+  background:#f9f9f9;
+  border:2px solid #ddd;
+  font-size:18px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+}
+#insertLeftBtn:hover,#insertRightBtn:hover {
+  background:#e3f2fd;
+  border-color:var(--accent);
+}
+#insertProgress {
+  margin-top:12px;
+  color:var(--muted);
+  font-size:15px;
+  font-weight:500;
+}
+
+@media(max-width:600px){
+  .header{flex-direction:column;align-items:stretch;}
+  .list-tab{min-width:50px;font-size:14px;padding:10px 12px;}
+  #floatingBtn{width:56px;height:56px;right:16px;bottom:16px;font-size:26px;}
+}
 </style>
 </head>
 <body data-theme="light">
@@ -74,6 +144,16 @@ justify-content: space-around;}
   </div>
 </div>
 
+<!-- ГАЛОЧКА + МОДАЛЬНОЕ ОКНО -->
+<div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);padding-left:4px;">
+  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;">
+    <input type="checkbox" id="autoSortCheckbox">
+    <span>Сортировать сразу (точная бинарная вставка)</span>
+  </label>
+</div>
+
+<div class="card"><ul id="list"></ul></div>
+
 <div id="sortCard" class="card" style="display:none;">
   <div class="round-title" id="roundTitle">Раунд</div>
   <div class="choices">
@@ -82,15 +162,30 @@ justify-content: space-around;}
   </div>
   <div class="meta">Пара <span id="pairNum">0</span> из <span id="pairMax">0</span></div>
   <div class="flex" style="margin-bottom:12px;">
-  <div class="meta">Раундов: <strong id="roundsNum">0</strong> • Текущий: <strong id="currentRound">0</strong></div>
+    <div class="meta">Раундов: <strong id="roundsNum">0</strong> • Текущий: <strong id="currentRound">0</strong></div>
+  </div>
 </div>
-</div>
-
-
-<div class="card"><ul id="list"></ul></div>
 
 <div id="ratingDisplay" class="card" style="display:none;margin-top:12px;"></div>
 <div id="bracket" class="card" style="display:none;"></div>
+
+<!-- МОДАЛЬНОЕ ОКНО ДЛЯ ТОЧНОЙ ВСТАВКИ -->
+<div id="insertSortCard">
+  <div id="insertSortInner">
+    <h3>Что важнее?</h3>
+    <div id="insertChoices">
+      <button id="insertLeftBtn">Важнее</button>
+      <button id="insertRightBtn">Менее важная</button>
+    </div>
+    <div id="insertProgress">Сравнение 1</div>
+    <div style="margin-top:20px;color:var(--muted);font-size:13px;">Клик вне окна — отмена</div>
+  </div>
+</div>
+
+<!-- Фиксированная кнопка -->
+<button id="floatingBtn" title="Добавить задачу">
+  <i data-lucide="plus"></i>
+</button>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script>
@@ -102,6 +197,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let rounds = [], roundsResults = [], curRound = 0, curPair = 0, running = false;
   let sortable = null;
   let currentDeleteModeTab = null;
+
+  // === НОВЫЕ ПЕРЕМЕННЫЕ ДЛЯ ТОЧНОЙ БИНАРНОЙ ВСТАВКИ ===
+  let insertInProgress = false;
+  let insertTask = '';
+  let insertLow = 0, insertHigh = 0;
+  let insertComparisons = 0;
 
   const listsContainer = document.getElementById('listsContainer');
   const listEl = document.getElementById('list');
@@ -123,6 +224,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const bracketEl = document.getElementById('bracket');
   const roundsNumEl = document.getElementById('roundsNum');
   const currentRoundEl = document.getElementById('currentRound');
+  const floatingBtn = document.getElementById('floatingBtn');
+
+  // === ДОБАВЛЕННЫЕ ЭЛЕМЕНТЫ ===
+  const autoSortCheckbox = document.getElementById('autoSortCheckbox');
+  const insertSortCard = document.getElementById('insertSortCard');
+  const insertLeftBtn = document.getElementById('insertLeftBtn');
+  const insertRightBtn = document.getElementById('insertRightBtn');
+  const insertProgress = document.getElementById('insertProgress');
+
+  // Фиксированная кнопка
+  floatingBtn.addEventListener('click', () => {
+    itemInput.focus();
+    itemInput.scrollIntoView({behavior: 'smooth', block: 'center'});
+  });
 
   function key(l,i){return `${l}|${i}`;}
   function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
@@ -137,6 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const th=localStorage.getItem('swiss_theme')||'light';
       document.documentElement.setAttribute('data-theme',th);
       themeBtn.querySelector('i').setAttribute('data-lucide',th==='dark'?'sun':'moon');
+      autoSortCheckbox.checked = localStorage.getItem('swiss_autoSortInsert') === 'true';
     }catch(e){console.warn(e);}
     if(listNames.length===0){listNames=['Основной'];items['Основной']=[];}
     if(!currentListName || !listNames.includes(currentListName)) currentListName=listNames[0];
@@ -147,8 +263,121 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('swiss_rating_v18',JSON.stringify(rating));
     localStorage.setItem('swiss_trash_v18',JSON.stringify(trash));
     localStorage.setItem('swiss_cur_v18',currentListName);
+    localStorage.setItem('swiss_autoSortInsert', autoSortCheckbox.checked);
   }
 
+  // === ТОЧНАЯ БИНАРНАЯ ВСТАВКА (100% точная!) ===
+  async function binaryInsert(taskName){
+    if(insertInProgress || running) return;
+    insertInProgress = true;
+    insertTask = taskName;
+    const list = items[currentListName];
+
+    if(list.length === 0){
+      list.unshift(taskName);
+      rating[key(currentListName,taskName)] = 50;
+      save(); renderList(); renderTabs(); updateDisplays();
+      insertInProgress = false;
+      return;
+    }
+
+    insertLow = 0;
+    insertHigh = list.length;
+    insertComparisons = 0;
+    insertSortCard.style.display = 'flex';
+
+    // Основной цикл: сужаем диапазон
+    while(insertHigh - insertLow > 1){
+      insertComparisons++;
+      const mid = Math.floor((insertLow + insertHigh) / 2);
+      const opponent = list[mid];
+
+      insertProgress.textContent = `Сравнение ${insertComparisons}`;
+      insertLeftBtn.textContent = taskName;
+      insertRightBtn.textContent = opponent;
+
+      const newIsBetter = await new Promise(resolve => {
+        insertLeftBtn.onclick = () => { insertLeftBtn.onclick = insertRightBtn.onclick = null; resolve(true); };
+        insertRightBtn.onclick = () => { insertLeftBtn.onclick = insertRightBtn.onclick = null; resolve(false); };
+      });
+
+      if(newIsBetter){
+        insertHigh = mid;
+      } else {
+        insertLow = mid;
+      }
+    }
+
+    // Финальное сравнение с элементом на позиции insertLow
+    let finalPos = insertLow;
+    if(insertLow < list.length){
+      insertComparisons++;
+      insertProgress.textContent = `Финальное сравнение`;
+      insertLeftBtn.textContent = taskName;
+      insertRightBtn.textContent = list[insertLow];
+
+      const betterThanLow = await new Promise(resolve => {
+        insertLeftBtn.onclick = () => { insertLeftBtn.onclick = insertRightBtn.onclick = null; resolve(true); };
+        insertRightBtn.onclick = () => { insertLeftBtn.onclick = insertRightBtn.onclick = null; resolve(false); };
+      });
+
+      if(!betterThanLow){
+        finalPos = insertLow + 1;
+      }
+    }
+
+    list.splice(finalPos, 0, taskName);
+    rating[key(currentListName,taskName)] = 50;
+    insertSortCard.style.display = 'none';
+    save();
+    renderList();
+    renderTabs();
+    updateDisplays();
+    insertInProgress = false;
+  }
+
+  // Отмена вставки
+  insertSortCard.addEventListener('click', e => {
+    if(e.target === insertSortCard){
+      insertSortCard.style.display = 'none';
+      insertInProgress = false;
+    }
+  });
+
+  // Сохранение состояния галочки
+  autoSortCheckbox.addEventListener('change', () => {
+    localStorage.setItem('swiss_autoSortInsert', autoSortCheckbox.checked);
+  });
+
+  // === ИЗМЕНЁННАЯ ФУНКЦИЯ addItems() ===
+  async function addItems(){
+    if(currentListName==='trash' || !stopSortingIfRunning()) return;
+    const lines=itemInput.value.split('\n').map(s=>s.trim()).filter(Boolean);
+    if(!lines.length) return;
+
+    const useBinaryInsert = autoSortCheckbox.checked;
+
+    for(const l of lines){
+      if(items[currentListName].includes(l)) continue;
+
+      if(useBinaryInsert && items[currentListName].length > 0){
+        await binaryInsert(l);
+      } else {
+        items[currentListName].push(l);
+        rating[key(currentListName,l)]=50;
+      }
+    }
+
+    save();
+    renderList();
+    renderTabs();
+    updateDisplays();
+
+    itemInput.value='';
+    addBtn.style.display='none';
+  }
+
+  // === ВСЁ ОСТАЛЬНОЕ — ТВОЙ ОРИГИНАЛЬНЫЙ КОД БЕЗ ИЗМЕНЕНИЙ ===
   function stopSortingIfRunning(){
     if(!running) return true;
     if(confirm('Сортировка активна. Прервать?')){
@@ -278,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const trashTab = document.createElement('div');
     trashTab.className = 'list-tab trash' + (currentListName === 'trash' ? ' active' : '');
-    trashTab.innerHTML = `<i data-lucide="trash-2"></i> Корзина <span class="badge">${trash.length}</span>`;
+    trashTab.innerHTML = ` Корзина <i data-lucide="trash-2"></i> <span class="badge">${trash.length}</span>`;
     trashTab.addEventListener('click', () => { hideDeleteButton(); if(stopSortingIfRunning()) switchList('trash'); });
     listsContainer.appendChild(trashTab);
 
@@ -323,7 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const li = document.createElement('li'); li.className='item';
       if(isTrash){
         li.dataset.idx = o.idx;
-        li.innerHTML = `<div class="name" style="flex:1;">${esc(o.name)}</div><div style="color:var(--muted);font-size:12px;">из «${esc(o.fromList)}»</div><div class="restore-overlay"><i data-lucide="rotate-cw"></i> Восстановить</div><div class="delete-overlay"><i data-lucide="trash-2"></i> Удалить навсегда</div>`;
+        li.innerHTML = `<div class="name" style="flex:1;">${esc(o.name)}</div><div style="color:var(--muted);font-size:12px;">из «${esc(o.fromList)}»</div><div class="restore-overlay"><i data-lucide="rotate-cw"></i> &nbspВосстановить</div><div class="delete-overlay">Удалить навсегда&nbsp<i data-lucide="trash-2"></i> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</div>`;
         addTrashSwipe(li);
       } else {
         li.dataset.name = o.name;
@@ -332,8 +561,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="name">${esc(o.name)}</div>
           <div style="margin-left:8px;color:var(--muted);font-size:13px;">${Math.round(r)}</div>
           <div class="handle">≡</div>
-          <div class="delete-overlay"><i data-lucide="trash-2"></i></div>
-          <div class="delete-overlay" style="background:#2b8aee;justify-content:flex-start;">В топ</div>
+          <div class="delete-overlay">В корзину&nbsp<i data-lucide="trash-2"></i>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</div>
+          <div class="delete-overlay" style="background:#2b8aee;justify-content:flex-start;">В топ ⤴</div>
         `;
         addItemTouchEdit(li);
         addItemSwipe(li);
@@ -347,7 +576,6 @@ document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
   }
 
-  // === Редактирование только при чётком тапе ===
   function addItemTouchEdit(li){
     const nameEl = li.querySelector('.name');
     let startX = 0, startY = 0, startTime = 0;
@@ -478,13 +706,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function restoreFromTrash(li){const i=+li.dataset.idx;const it=trash[i];li.classList.add('removing');li.ontransitionend=()=>{trash.splice(i,1);if(!items[it.fromList])items[it.fromList]=[];items[it.fromList].push(it.name);save();renderList();renderTabs();};}
   function deleteForever(li){const i=+li.dataset.idx;li.classList.add('removing');li.ontransitionend=()=>{trash.splice(i,1);save();renderList();renderTabs();};}
 
-  function addItems(){
-    if(currentListName==='trash' || !stopSortingIfRunning()) return;
-    const lines=itemInput.value.split('\n').map(s=>s.trim()).filter(Boolean);
-    lines.forEach(l=>{if(!items[currentListName].includes(l)){items[currentListName].push(l);rating[key(currentListName,l)]=50;}});
-    if(lines.length){save();renderList();renderTabs();}
-    itemInput.value=''; addBtn.style.display='none';
-  }
   itemInput.addEventListener('input',()=>{addBtn.style.display=itemInput.value.trim()?'flex':'none';});
   itemInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();addItems();}});
   addBtn.onclick=addItems;
@@ -611,6 +832,8 @@ document.addEventListener('DOMContentLoaded', () => {
   addBtn.style.display='none';
   itemInput.focus();
   exitBtn.style.display='none';
+
+  lucide.createIcons();
 });
 </script>
 </body>
